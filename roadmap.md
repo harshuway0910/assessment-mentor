@@ -1,0 +1,4 @@
+- [ ] Build the EduCheck AI frontend shell with responsive sidebar and top bar
+- [ ] Add dashboard, courses, upload simulation, similarity, grading, review, gradebook, reports, and settings views
+- [ ] Connect navigation and mock interactions for analysis, filters, edits, approval, and export feedback
+- [ ] Verify the preview across desktop and mobile sizes
