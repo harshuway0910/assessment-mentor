@@ -27,7 +27,8 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useMemo, useState, type LucideIcon } from "react";
+import { useState } from "react";
+import type { LucideIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -128,6 +129,29 @@ const rubricRows = [
   { name: "Presentation", description: "Structure and communication", weight: 20, max: 20, score: 14 },
 ];
 
+const defaultCourse: Course = {
+  name: "Object Oriented Programming",
+  code: "CS203",
+  section: "A",
+  students: 62,
+  assignments: 7,
+  reviews: 9,
+  flags: 8,
+  tone: "sage",
+};
+
+const defaultReview: ReviewItem = {
+  id: 1,
+  student: "Rahul Sharma",
+  roll: "2024-047",
+  type: "Similarity flag",
+  detail: "Rahul ↔ Amit · 94%",
+  score: 82,
+  similarity: 94,
+  aiContent: 31,
+  status: "flagged",
+};
+
 function Pill({ children, tone = "neutral" }: { children: React.ReactNode; tone?: "neutral" | "lav" | "sage" | "clay" | "amber" }) {
   return <span className={cn("inline-flex items-center rounded-md px-2.5 py-1 text-[11px] font-medium", `tone-${tone}`)}>{children}</span>;
 }
@@ -166,8 +190,8 @@ function EduCheckApp() {
   const [sortDesc, setSortDesc] = useState(true);
   const [toast, setToast] = useState("");
 
-  const course = courses[courseIndex];
-  const selectedReview = reviews.find((item) => item.id === selectedReviewId) ?? reviews[0];
+  const course = courses[courseIndex] ?? defaultCourse;
+  const selectedReview = reviews.find((item) => item.id === selectedReviewId) ?? defaultReview;
   const pendingCount = reviews.filter((item) => item.status !== "approved").length;
 
   const showToast = (message: string) => {
@@ -269,7 +293,7 @@ function Dashboard({ onNavigate, onReview, pendingCount, course }: { onNavigate:
 
 function Courses({ courseIndex, setCourseIndex, courseTab, setCourseTab, onNavigate, search }: { courseIndex: number; setCourseIndex: (value: number) => void; courseTab: string; setCourseTab: (value: string) => void; onNavigate: (view: ViewKey) => void; search: string }) {
   const filtered = courses.filter((item) => `${item.name} ${item.code} ${item.section}`.toLowerCase().includes(search.toLowerCase()));
-  const course = courses[courseIndex];
+  const course = courses[courseIndex] ?? defaultCourse;
   return <><SectionTitle eyebrow="Workspace · course management" title="My courses" description="Keep every assignment, assessment, review, and gradebook separated by course and section." action={<Button className="rounded-lg bg-ink text-card"><BookOpen />Add course</Button>} /><div className="grid gap-4 md:grid-cols-2">{filtered.map((item) => { const index = courses.indexOf(item); return <button key={item.code} onClick={() => { setCourseIndex(index); setCourseTab("Overview"); }} className={cn("group rounded-[14px] border bg-card p-5 text-left transition-all hover:-translate-y-0.5 hover:shadow-md", courseIndex === index ? "border-lav ring-2 ring-lav-soft" : "border-line")}><div className="flex items-start justify-between"><div className={cn("grid size-10 place-items-center rounded-lg", `soft-${item.tone}`)}><GraduationCap className={cn("size-5", `icon-${item.tone}`)} /></div><MoreHorizontal className="size-4 text-faint" /></div><div className="mt-4 flex items-end justify-between gap-2"><div><p className="font-display text-xl">{item.name}</p><p className="mt-1 text-xs text-muted-ink">{item.code} · Section {item.section}</p></div><span className="text-xs text-faint">{item.students} students</span></div><div className="mt-5 grid grid-cols-3 divide-x divide-line border-t border-line pt-4 text-center"><div><p className="text-lg font-semibold">{item.assignments}</p><p className="text-[10px] text-faint">Assignments</p></div><div><p className="text-lg font-semibold text-amber-ink">{item.reviews}</p><p className="text-[10px] text-faint">Reviews</p></div><div><p className="text-lg font-semibold text-clay">{item.flags}</p><p className="text-[10px] text-faint">Similarity</p></div></div></button>})}</div><div className="mt-6 rounded-[14px] border border-line bg-card p-5"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-[11px] uppercase tracking-[0.18em] text-faint">Selected course</p><h2 className="mt-1 font-display text-2xl">{course.name} <span className="text-base text-muted-ink">· {course.code} · Section {course.section}</span></h2></div><Button variant="outline" onClick={() => onNavigate("gradebook")}>Open gradebook <ArrowRight /></Button></div><div className="mt-5 flex flex-wrap gap-1 border-b border-line">{["Overview", "Assignments", "Assessments", "Students", "Gradebook", "Reports"].map((tab) => <Button key={tab} variant="ghost" onClick={() => { setCourseTab(tab); if (tab === "Assignments") onNavigate("assignments"); if (tab === "Assessments") onNavigate("assessments"); if (tab === "Gradebook") onNavigate("gradebook"); if (tab === "Reports") onNavigate("reports"); }} className={cn("rounded-none border-b-2 border-transparent px-3 text-xs text-muted-ink", courseTab === tab && "border-amber text-ink")}>{tab}</Button>)}</div><div className="grid gap-4 pt-5 md:grid-cols-3"><div><p className="text-xs text-muted-ink">Course health</p><p className="mt-2 font-display text-3xl">On track</p><p className="mt-1 text-xs text-sage">78% average · +4 pts this term</p></div><div><p className="text-xs text-muted-ink">Next deadline</p><p className="mt-2 font-display text-3xl">14 Oct</p><p className="mt-1 text-xs text-faint">Assignment 4 · 24 submissions expected</p></div><div><p className="text-xs text-muted-ink">Review load</p><p className="mt-2 font-display text-3xl">{course.reviews}</p><p className="mt-1 text-xs text-amber-ink">items waiting for you</p></div></div></div></>;
 }
 
