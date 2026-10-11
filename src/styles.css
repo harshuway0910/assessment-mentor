@@ -99,16 +99,16 @@
   --card: oklch(0.995 0.006 200);
   --ink: oklch(0.227 0.051 252);
   --muted-ink: oklch(0.46 0.045 240);
-  --faint: oklch(0.63 0.035 225);
+  --faint: oklch(0.55 0.04 228);
   --line: oklch(0.915 0.022 205);
   --lav: oklch(0.579 0.097 206);
-  --lav-soft: oklch(0.95 0.038 200);
+  --lav-soft: oklch(0.925 0.06 198);
   --lav-ink: oklch(0.446 0.074 210);
-  --blue: oklch(0.72 0.12 195);
+  --blue: oklch(0.78 0.15 190);
   --blue-soft: oklch(0.965 0.03 195);
   --blue-ink: oklch(0.45 0.09 200);
-  --amber: oklch(0.74 0.13 80);
-  --amber-ink: oklch(0.46 0.11 74);
+  --amber: oklch(0.76 0.11 72);
+  --amber-ink: oklch(0.47 0.1 70);
   --amber-soft: oklch(0.945 0.055 85);
   --sage: oklch(0.65 0.12 165);
   --sage-soft: oklch(0.92 0.055 165);
@@ -219,6 +219,15 @@
   }
 
   button, input, textarea, select { font: inherit; }
+
+  /* Matched phrases in submissions and comparisons: brand aqua, not browser yellow. */
+  mark {
+    background-color: color-mix(in oklab, var(--blue) 26%, white);
+    color: var(--ink);
+    border-radius: 3px;
+    padding: 0.08em 0.22em;
+    box-shadow: inset 0 -1px 0 var(--lav);
+  }
 }
 
 @keyframes fade-up {
